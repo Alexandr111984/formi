@@ -14,15 +14,21 @@ public class Request {
 
     private final String method;
     private final String fullPath;
-    private  String path;
+    private String path;
 
     private List<NameValuePair> pairs;
 
     public Request(String requestMethod, String requestPath) {
         this.method = requestMethod;
         this.fullPath = requestPath;
-        List<NameValuePair> pairs = URLEncodedUtils.parse(this.fullPath, StandardCharsets.UTF_8);
-
+        if (!fullPath.equals("/")) {
+            final var parts = fullPath.split("\\?", 2);
+            path = parts[0];
+            if (parts.length == 2)
+                pairs = URLEncodedUtils.parse(parts[1], StandardCharsets.UTF_8);
+        } else {
+            this.path = fullPath;
+        }
     }
 
     public String getMethod() {
@@ -30,22 +36,23 @@ public class Request {
     }
 
     public String getPath() {
+        return path;
+    }
+
+    public String getFullPath() {
         return fullPath;
     }
 
-    public String getQueryParam(String name)
-    {
-        for(int i = 0; i < pairs.size(); i++)
-        {
+    public String getQueryParam(String name) {
+        for (int i = 0; i < pairs.size(); i++) {
             if (name.equals(pairs.get(i).getName()))
                 return pairs.get(i).getValue();
         }
         return "";
     }
 
-    public List<NameValuePair> getQueryParam()
-    {
-        return pairs;
+    public String getQueryParam() {
+        return pairs.toString();
     }
 
 }

@@ -20,7 +20,7 @@ public class Server {
     public Server(int serverSocket, int poolSize) {
         SERVER_SOCKET = serverSocket;
         executorService = Executors.newFixedThreadPool(poolSize);
-      handlers=new ConcurrentHashMap<>();
+        handlers = new ConcurrentHashMap<>();
     }
 
     public void start() throws RuntimeException {
@@ -63,8 +63,9 @@ public class Server {
 
             final var method = parts[0];
             final var path = parts[1];
+
             Request request = new Request(method, path);
-            System.out.println("to string: "+request.getQueryParam("last").toString());
+            // System.out.println("to string: " + request.getQueryParam());
 
             if (!handlers.containsKey(request.getMethod())) {
                 return;
@@ -83,7 +84,6 @@ public class Server {
         }
 
     }
-
 
 
 }
